@@ -1,8 +1,8 @@
 name: Publish Docker Image
 on:
   push:
-    tags:
-      - v*
+    branches: main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -29,22 +29,7 @@ jobs:
         run: |
           echo "${DOCKER_PASSWORD}" | docker login --username="${DOCKER_USERNAME}" registry.cn-hangzhou.aliyuncs.com --password-stdin
       
-      - name: Docker buildx image and push on master branch
-        if: github.ref == 'refs/heads/master'
+      - name: Docker buildx image and push on main branch
+        if: github.ref == 'refs/heads/main'
         run: |
-          docker buildx build --output "type=image,push=true" --platform=linux/amd64,linux/arm/v7,linux/arm64 --tag registry.cn-hangzhou.aliyuncs.com/djxiao71/jd777:latest docker/
-
-      - name: Replace tag without `v`
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: actions/github-script@v1
-        id: version
-        with:
-          script: |
-            return context.payload.ref.replace(/\/?refs\/tags\/v/, '')
-          result-encoding: string
-
-      - name: Docker buildx image and push on release
-        if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          docker buildx build --output "type=image,push=true" --platform=linux/amd64,linux/arm/v7,linux/arm64 --tag registry.cn-hangzhou.aliyuncs.com/djxiao71/jd777:${{steps.version.outputs.result}} docker/
           docker buildx build --output "type=image,push=true" --platform=linux/amd64,linux/arm/v7,linux/arm64 --tag registry.cn-hangzhou.aliyuncs.com/djxiao71/jd777:latest docker/
