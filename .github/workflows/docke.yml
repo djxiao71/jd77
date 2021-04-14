@@ -32,4 +32,6 @@ jobs:
       - name: Docker buildx image and push on main branch
         if: github.ref == 'refs/heads/main'
         run: |
-          docker buildx build --output "type=image,push=true" --platform=linux/amd64,linux/arm/v7,linux/arm64 --tag registry.cn-hangzhou.aliyuncs.com/djxiao71/jd777:latest docker/
+          docker buildx build --output "type=image,push=true" --platform=linux/amd64 --tag registry.cn-hangzhou.aliyuncs.com/djxiao71/jd777:amd64 docker/
+          docker buildx build --output "type=image,push=true" --platform=linux/arm/v7 --tag registry.cn-hangzhou.aliyuncs.com/djxiao71/jd777:arm docker/
+          docker buildx build --output "type=image,push=true" --platform=linux/arm64 --tag registry.cn-hangzhou.aliyuncs.com/djxiao71/jd777:arm64 docker/
