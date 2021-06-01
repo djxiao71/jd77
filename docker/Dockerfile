@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM alpine:latest
 ARG JD_SHELL_URL=https://gitee.com/djxiao71/dj77.git
 ARG JD_SHELL_BRANCH=main
 ARG JD_SCRIPTS_URL=git@gitee.com:djxiao71/jd_scripts.git
@@ -18,27 +18,31 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && apk upgrade \
     && apk --no-cache add -f bash \
                              coreutils \
-                             moreutils \
+                             diffutils \
                              git \
                              wget \
                              curl \
                              nano \
                              tzdata \
                              perl \
-                             jq \
                              openssh-client \
-    && rm -rf /var/cache/apk/* \
+                             nodejs-lts \
+                             npm \
+    && echo "========= 修改时区 =========" \
     && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
+    && echo "========= 部署SSH KEY =========" \
     && mkdir -p /root/.ssh \
     && echo -e $KEY > /root/.ssh/id_rsa \
     && chmod 600 /root/.ssh/id_rsa \
-    && ssh-keyscan gitee.com > /root/.ssh/known_hosts \     
+    && ssh-keyscan gitee.com > /root/.ssh/known_hosts \
+    && echo "====Git clone和安装PM2 =====" \
     && git clone -b $JD_SHELL_BRANCH $JD_SHELL_URL $JD_DIR \
     && cd $JD_DIR/panel \
     && npm config set registry https://registry.npm.taobao.org \
     && npm install \
     && npm install -g pm2 \
+    && echo "========= 创建软链接 =========" \
     && ln -sf $JD_DIR/jd.sh /usr/local/bin/jd \
     && ln -sf $JD_DIR/jd.sh /usr/local/bin/task \
     && ln -sf $JD_DIR/git_pull.sh /usr/local/bin/git_pull \
@@ -51,5 +55,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && cp -f $JD_DIR/docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh \
     && chmod 777 /usr/local/bin/docker-entrypoint.sh \
     && chmod 777 $JD_DIR/*.sh \
-    && rm -rf /root/.npm
+    && echo "========= 清理 =========" \
+    && rm -rf /root/.npm /var/cache/apk/*
 ENTRYPOINT ["docker-entrypoint.sh"]
