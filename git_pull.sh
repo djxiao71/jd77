@@ -54,14 +54,14 @@ function Git_PullShell {
   git fetch --all
   ExitStatusShell=$?
   git reset --hard origin/main
-  wget -q --no-check-certificate https://ghproxy.com/https://raw.githubusercontent.com/wuzhi-docker1/jd-base/main/sample/config.sh.sample -O ${FileConfSample}
+  wget -q --no-check-certificate https://ghproxy.com/https://raw.githubusercontent.com/wuzhi04/jd-base/main/sample/config.sh.sample -O ${FileConfSample}
   echo
 }
 
 ## 克隆scripts
 function Git_CloneScripts {
   echo -e "克隆scripts...\n"
-  git clone -b master ${ScriptsURL} ${ScriptsDir}
+  git clone -b main ${ScriptsURL} ${ScriptsDir}
   ExitStatusScripts=$?
   echo
 }
@@ -72,7 +72,7 @@ function Git_PullScripts {
   cd ${ScriptsDir}
   git fetch --all
   ExitStatusScripts=$?
-  git reset --hard origin/master
+  git reset --hard origin/main
   echo
 }
 
