@@ -1,10 +1,10 @@
-name: Publish Docker Image
+name: "构建JD正式版"
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build
+    name: 构建JD正式版
     runs-on: ubuntu-latest
     steps:
       -
