@@ -35,10 +35,11 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && chmod 600 /root/.ssh/id_rsa \
     && ssh-keyscan gitee.com > /root/.ssh/known_hosts \
     && echo "====Git clone和安装PM2 =====" \
+    && npm install -g yarn \
+    && npm install -g pm2 \
     && git clone -b $JD_SHELL_BRANCH $JD_SHELL_URL $JD_DIR \
     && cd $JD_DIR/panel \
-    && npm install \
-    && npm install -g pm2 \
+    && yarn install \
     && echo "========= 创建软链接 =========" \
     && ln -sf ${JD_DIR}/jd.sh /usr/local/bin/jd \
     && ln -sf ${JD_DIR}/git_pull.sh /usr/local/bin/git_pull \
